@@ -9,3 +9,11 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa
+
+api:
+  blog-search-auth:
+    kakao:
+      authorization: KakaoAK 7eaf0ea2434f532a4d7ff2a6fb1a74e2
+    naver:
+      client-id: KR6bw6NSYMseVlI446Bs
+      client-secret: 7bGQStPqQS
