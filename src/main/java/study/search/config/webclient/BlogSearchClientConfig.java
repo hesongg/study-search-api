@@ -20,7 +20,7 @@ public class BlogSearchClientConfig {
     private final BlogSearchProperties properties;
 
     @Bean
-    public WebClient kakaoClient() {
+    public WebClient kakaoWebClient() {
         return WebClient.builder()
                 .baseUrl(KAKAO.getUrl())
                 .defaultHeader(AUTHORIZATION, properties.getKakao().getAuthorization())
@@ -28,7 +28,7 @@ public class BlogSearchClientConfig {
     }
 
     @Bean
-    public WebClient naverClient() {
+    public WebClient naverWebClient() {
         return WebClient.builder()
                 .baseUrl(NAVER.getUrl())
                 .defaultHeader(NAVER_CLIENT_ID_HEADER, properties.getNaver().getClientId())
