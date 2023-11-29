@@ -14,10 +14,6 @@ public enum ApiProvider {
     private final String sortTypeAccuracy;
     private final String sortTypeRecency;
 
-    public String getDefaultSortTypeByProvider() {
-        return sortTypeAccuracy;
-    }
-
     public String getSortTypeByProvider(SortType sortType) {
         return sortType.isAccuracy()
                 ? sortTypeAccuracy

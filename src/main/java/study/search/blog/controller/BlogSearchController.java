@@ -16,7 +16,7 @@ public class BlogSearchController {
     private final BlogSearchClientService blogSearchClientService;
 
     @GetMapping("/study/blog-search")
-    public Mono<String> getBlogSearchResult(@RequestParam String query,
+    public Mono<Object> getBlogSearchResult(@RequestParam String query,
                                             @RequestParam(required = false, defaultValue = "1") int page,
                                             @RequestParam(required = false, defaultValue = "10") int size,
                                             @RequestParam(required = false) String sort) {

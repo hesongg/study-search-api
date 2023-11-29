@@ -19,7 +19,7 @@ public record SearchRequest(ApiProvider apiProvider,
                 .query(query)
                 .page(1)
                 .size(10)
-                .sort(apiProvider.getDefaultSortTypeByProvider())
+                .sortType(SortType.ACCURACY)
                 .build();
     }
 
