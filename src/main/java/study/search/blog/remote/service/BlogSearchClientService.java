@@ -21,7 +21,7 @@ public class BlogSearchClientService {
     private final BlogSearchClient naverBlogSearchClient;
     private final KeywordService keywordService;
 
-    public Mono<Object> getBlogSearchResult(SearchRequest request) {
+    public Mono<String> getBlogSearchResult(SearchRequest request) {
         keywordService.addKeywordCount(request.query());
 
         var kakaoRequest = request.toApiProvider(KAKAO);
@@ -36,7 +36,7 @@ public class BlogSearchClientService {
                 });
     }
 
-    public Mono<Object> getResultApiProvider(SearchRequest request) {
+    public Mono<String> getResultApiProvider(SearchRequest request) {
         return switch (request.apiProvider()) {
             case KAKAO -> kakaoBlogSearchClient.callClient(request);
             case NAVER -> naverBlogSearchClient.callClient(request);

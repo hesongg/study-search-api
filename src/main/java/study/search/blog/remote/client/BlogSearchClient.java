@@ -5,5 +5,5 @@ import study.search.blog.dto.SearchRequest;
 
 public interface BlogSearchClient {
 
-    Mono<Object> callClient(SearchRequest request);
+    Mono<String> callClient(SearchRequest request);
 }

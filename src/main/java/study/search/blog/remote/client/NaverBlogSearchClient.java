@@ -1,7 +1,6 @@
 package study.search.blog.remote.client;
 
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -14,8 +13,7 @@ public class NaverBlogSearchClient implements BlogSearchClient {
     private final WebClient naverWebClient;
 
     @Override
-    public Mono<Object> callClient(SearchRequest request) {
-
+    public Mono<String> callClient(SearchRequest request) {
         return naverWebClient.get()
                 .uri(uriBuilder -> uriBuilder.queryParam("query", request.query())
                         .queryParam("sort", request.sort())
@@ -23,8 +21,6 @@ public class NaverBlogSearchClient implements BlogSearchClient {
                         .queryParam("display", request.size())
                         .build())
                 .retrieve()
-                .bodyToMono(String.class)
-                .map(JSONObject::new)
-                .map(JSONObject::toString);
+                .bodyToMono(String.class);
     }
 }

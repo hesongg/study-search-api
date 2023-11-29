@@ -24,7 +24,7 @@ class BlogSearchClientServiceTest {
 
         assertThat(kakaoResponse).isNotNull();
 
-        log.info(String.valueOf(kakaoResponse));
+        log.info(kakaoResponse);
     }
 
     @Test
@@ -33,6 +33,6 @@ class BlogSearchClientServiceTest {
 
         assertThat(naverResponse).isNotNull();
 
-        log.info(String.valueOf(naverResponse));
+        log.info(naverResponse);
     }
 }

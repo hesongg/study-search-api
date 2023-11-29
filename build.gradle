@@ -28,10 +28,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 
-	implementation 'org.json:json:20220320'
-	implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
-	implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.1'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.1'
+	implementation 'org.json:json:20230227'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
