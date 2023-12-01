@@ -1,18 +1,23 @@
 package study.search.keyword.service;
 
+import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import study.search.keyword.domain.Keyword;
 import study.search.keyword.domain.repository.KeywordRepository;
 import study.search.keyword.dto.KeywordsDTO;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class KeywordService {
 
     private static final PageRequest TOP_TEN_PAGING = PageRequest.of(0, 10);
+    private static final int MAX_RETRY_COUNT = 3;
 
     private final KeywordRepository keywordRepository;
 
@@ -29,11 +34,39 @@ public class KeywordService {
 
         var findKeyword = keywordRepository.findById(keyword).orElse(Keyword.emptyOf());
         if (findKeyword.isEmpty()) {
-            keywordRepository.save(Keyword.of(keyword, 1));
+            insertKeyword(keyword);
             return;
         }
 
-        findKeyword.increaseSearchCount();
-        keywordRepository.save(findKeyword);
+        updateKeywordCount(findKeyword);
+    }
+
+    private void insertKeyword(String keyword) {
+        try {
+            keywordRepository.save(Keyword.of(keyword, 1));
+        } catch (Exception e) {
+            log.error("FAIL-insert keyword: {}, {}", keyword, ExceptionUtils.getStackTrace(e));
+        }
+    }
+
+    private void updateKeywordCount(Keyword findKeyword) {
+        int retry = 0;
+
+        while (retry < MAX_RETRY_COUNT) {
+            try {
+                findKeyword.increaseSearchCount();
+                keywordRepository.save(findKeyword);
+
+                break;
+            } catch (OptimisticLockException e) {
+                retry++;
+
+                if (retry >= MAX_RETRY_COUNT) {
+                    log.error("FAIL-update keyword: {}, {}", findKeyword.getKeyword(), ExceptionUtils.getStackTrace(e));
+                }
+            } catch (Exception e) {
+                log.error("FAIL-update keyword: {}, {}", findKeyword.getKeyword(), ExceptionUtils.getStackTrace(e));
+            }
+        }
     }
 }
