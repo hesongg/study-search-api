@@ -1,11 +1,13 @@
 package study.search.config.webclient.properteis;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @ConfigurationProperties("api.blog-search-auth")
 @Configuration

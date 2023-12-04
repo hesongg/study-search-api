@@ -1,11 +1,11 @@
 package study.search.keyword.service;
 
-import jakarta.persistence.OptimisticLockException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import study.search.keyword.domain.Keyword;
 import study.search.keyword.domain.repository.KeywordRepository;
@@ -27,7 +27,7 @@ public class KeywordService {
         return KeywordsDTO.from(mostPopularKeywords);
     }
 
-    public void addKeywordCount(String keyword) {
+    public void increaseKeywordCount(String keyword) {
         if (StringUtils.isEmpty(keyword)) {
             return;
         }
@@ -58,14 +58,16 @@ public class KeywordService {
                 keywordRepository.save(findKeyword);
 
                 break;
-            } catch (OptimisticLockException e) {
+            } catch (ObjectOptimisticLockingFailureException e) {
                 retry++;
 
                 if (retry >= MAX_RETRY_COUNT) {
-                    log.error("FAIL-update keyword: {}, {}", findKeyword.getKeyword(), ExceptionUtils.getStackTrace(e));
+                    log.error("FAIL-update retry over, keyword: {}, {}", findKeyword.getKeyword(), ExceptionUtils.getStackTrace(e));
+                    throw new ObjectOptimisticLockingFailureException("optimistic lock exception", e);
                 }
             } catch (Exception e) {
                 log.error("FAIL-update keyword: {}, {}", findKeyword.getKeyword(), ExceptionUtils.getStackTrace(e));
+                throw new RuntimeException(e);
             }
         }
     }
