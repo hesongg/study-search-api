@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import study.search.keyword.domain.Keyword;
 import study.search.keyword.domain.repository.KeywordRepository;
 import study.search.keyword.dto.KeywordsDTO;
@@ -16,17 +16,17 @@ import study.search.keyword.dto.KeywordsDTO;
 @Service
 public class KeywordService {
 
-    private static final PageRequest TOP_TEN_PAGING = PageRequest.of(0, 10);
     private static final int MAX_RETRY_COUNT = 3;
 
     private final KeywordRepository keywordRepository;
 
     public KeywordsDTO getPopularKeywords() {
-        var mostPopularKeywords = keywordRepository.findMostPopularKeywords(TOP_TEN_PAGING);
+        var mostPopularKeywords = keywordRepository.findTop10ByOrderBySearchCountDesc();
 
         return KeywordsDTO.from(mostPopularKeywords);
     }
 
+    @Transactional
     public void increaseKeywordCount(String keyword) {
         if (StringUtils.isEmpty(keyword)) {
             return;

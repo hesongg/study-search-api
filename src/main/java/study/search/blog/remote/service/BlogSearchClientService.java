@@ -25,12 +25,12 @@ public class BlogSearchClientService {
         keywordService.increaseKeywordCount(request.query());
 
         var kakaoRequest = request.toApiProvider(KAKAO);
-        var naverRequest = request.toApiProvider(NAVER);
 
 //        var naverRequest = request.toApiProvider(NAVER).toBuilder().query("네이버 블로그 검색 테스트").build();
 
         return getResultApiProvider(kakaoRequest)
                 .onErrorResume(e -> {
+                    var naverRequest = request.toApiProvider(NAVER);
                     log.error("ERROR: getBlogSearchResult by kakaoRequest: {}", ExceptionUtils.getStackTrace(e));
                     return getResultApiProvider(naverRequest);
                 });

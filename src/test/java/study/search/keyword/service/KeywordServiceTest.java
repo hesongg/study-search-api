@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 import study.search.keyword.domain.Keyword;
 import study.search.keyword.domain.repository.KeywordRepository;
 
@@ -24,6 +26,7 @@ class KeywordServiceTest {
     @Autowired
     KeywordRepository keywordRepository;
 
+    @Transactional
     @DisplayName("검색어 검색 횟수로 정렬하여 조회")
     @Test
     void getPopularKeywords_test() {
@@ -45,30 +48,29 @@ class KeywordServiceTest {
         assertThat(popularKeywords.keywords().get(tenth_PopularItemIndex).keyword()).isEqualTo(test_keyword_format.concat("3"));
     }
 
+    @Transactional
     @DisplayName("검색어 insert, 검색 횟수 update")
     @Test
     void increaseKeywordTest() {
         //given
-        var testKeyword = "test";
+        var testKeyword = "테스트";
         keywordService.increaseKeywordCount(testKeyword);
 
         //when
-        var keyword = keywordService.getPopularKeywords().keywords().get(0);
+        var keyword = keywordRepository.findById(testKeyword).get();
 
         //then
-        assertThat(keyword.keyword()).isEqualTo(testKeyword);
-        assertThat(keyword.searchCount()).isEqualTo(1);
+        assertThat(keyword.getKeyword()).isEqualTo(testKeyword);
+        assertThat(keyword.getSearchCount()).isEqualTo(1);
 
         //given
         keywordService.increaseKeywordCount(testKeyword);
 
-        //when
-        keyword = keywordService.getPopularKeywords().keywords().get(0);
-
         //then
-        assertThat(keyword.searchCount()).isEqualTo(2);
+        assertThat(keyword.getSearchCount()).isEqualTo(2);
     }
 
+    @Rollback
     @DisplayName("update 동시 수행 시 낙관적락 테스트")
     @Test
     void optimisticLockTest() {
