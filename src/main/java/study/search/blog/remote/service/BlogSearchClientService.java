@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
-import study.search.blog.dto.SearchRequest;
+import study.search.blog.dto.SearchRequestDTO;
 import study.search.blog.remote.client.BlogSearchClient;
 import study.search.keyword.service.KeywordService;
 
@@ -21,7 +21,7 @@ public class BlogSearchClientService {
     private final BlogSearchClient naverBlogSearchClient;
     private final KeywordService keywordService;
 
-    public Mono<String> getBlogSearchResult(SearchRequest request) {
+    public Mono<String> getBlogSearchResult(SearchRequestDTO request) {
         keywordService.increaseKeywordCount(request.query());
 
         var kakaoRequest = request.toApiProvider(KAKAO);
@@ -36,7 +36,7 @@ public class BlogSearchClientService {
                 });
     }
 
-    private Mono<String> getResultApiProvider(SearchRequest request) {
+    private Mono<String> getResultApiProvider(SearchRequestDTO request) {
         return switch (request.apiProvider()) {
             case KAKAO -> kakaoBlogSearchClient.callClient(request);
             case NAVER -> naverBlogSearchClient.callClient(request);

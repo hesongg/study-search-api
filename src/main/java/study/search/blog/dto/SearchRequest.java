@@ -1,44 +1,14 @@
 package study.search.blog.dto;
 
-import lombok.Builder;
-import study.search.blog.domain.ApiProvider;
-import study.search.blog.domain.SortType;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
-@Builder(toBuilder = true)
-public record SearchRequest(ApiProvider apiProvider,
-                            String query,
-                            SortType sortType,
-                            String sort,
-                            int page,
-                            int size) {
+@Data
+public class SearchRequest {
 
-    public static SearchRequest defaultOf(ApiProvider apiProvider,
-                                          String query) {
-        return SearchRequest.builder()
-                .apiProvider(apiProvider)
-                .query(query)
-                .page(1)
-                .size(10)
-                .sortType(SortType.ACCURACY)
-                .build();
-    }
-
-    public static SearchRequest of(String query,
-                                   int page,
-                                   int size,
-                                   SortType sortType) {
-        return SearchRequest.builder()
-                .query(query)
-                .page(page)
-                .size(size)
-                .sortType(sortType)
-                .build();
-    }
-
-    public SearchRequest toApiProvider(ApiProvider apiProvider) {
-        return this.toBuilder()
-                .apiProvider(apiProvider)
-                .sort(apiProvider.getSortTypeByProvider(sortType))
-                .build();
-    }
+    @NotBlank(message = "query must be not null")
+    String query;
+    int page = 1;
+    int size = 10;
+    String sort;
 }

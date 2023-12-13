@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import study.search.blog.dto.SearchRequest;
+import study.search.blog.dto.SearchRequestDTO;
 import study.search.blog.remote.service.BlogSearchClientService;
 import study.search.keyword.domain.repository.KeywordRepository;
 
@@ -30,7 +30,7 @@ class BlogSearchClientServiceTest {
         var testKeyword = "테스트";
 
         //when
-        var kakaoResponse = clientService.getBlogSearchResult(SearchRequest.defaultOf(KAKAO, testKeyword)).block();
+        var kakaoResponse = clientService.getBlogSearchResult(SearchRequestDTO.defaultOf(KAKAO, testKeyword)).block();
         var findKeyword = repository.findById(testKeyword).get();
 
         //then
@@ -47,7 +47,7 @@ class BlogSearchClientServiceTest {
         var testKeyword = "테스트";
 
         //when
-        var naverResponse = clientService.getBlogSearchResult(SearchRequest.defaultOf(NAVER, testKeyword)).block();
+        var naverResponse = clientService.getBlogSearchResult(SearchRequestDTO.defaultOf(NAVER, testKeyword)).block();
         var findKeyword = repository.findById(testKeyword).get();
 
         //then

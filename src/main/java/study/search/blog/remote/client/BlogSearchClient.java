@@ -1,9 +1,9 @@
 package study.search.blog.remote.client;
 
 import reactor.core.publisher.Mono;
-import study.search.blog.dto.SearchRequest;
+import study.search.blog.dto.SearchRequestDTO;
 
 public interface BlogSearchClient {
 
-    Mono<String> callClient(SearchRequest request);
+    Mono<String> callClient(SearchRequestDTO request);
 }
